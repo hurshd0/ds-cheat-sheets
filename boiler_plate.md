@@ -7,6 +7,8 @@ import pandas as pd # Data analysis lib
 import matplotlib.pyplot as plt # plotting lib
 import seaborn as sns # matplotlib wrapper plotting lib
 import random # python random lib
+# Bayes l
+import pymc3 as pm
 
 # Matplotlib and Seaborn params
 from matplotlib import rcParams
@@ -31,6 +33,14 @@ warnings.filterwarnings("ignore")
 # Add Scipy Stats
 # https://docs.scipy.org/doc/scipy/reference/stats.html
 from scipy.stats import stats
+
+def check_versions():
+	print('Numpy v{}'.format(np.__version__))
+	print('Pandas v{}'.format(pd.__version__))
+	print('Matplotlib v{}'.format(plt.__version__))
+    print('Seaborn v{}'.format(sns.__version__))
+    print('PyMC3 v{}'.format(pm.__version__))
+
 
 #######################################################
 ```
