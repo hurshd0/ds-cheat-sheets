@@ -9,6 +9,9 @@ import seaborn as sns # matplotlib wrapper plotting lib
 import random # python random lib
 import pymc3 as pm # statmodelling lib
 
+# Import data structures from collections
+from collections import OrderedDict
+
 # Matplotlib and Seaborn params
 from matplotlib import rcParams
 rcParams['figure.figsize'] = 10, 6
