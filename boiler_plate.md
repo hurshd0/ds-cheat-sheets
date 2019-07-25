@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt # plotting lib
 import seaborn as sns # matplotlib wrapper plotting lib
 import random # python random lib
 import pymc3 as pm # statmodelling lib
+import theano.tensor as tt
+import tensorflow as tf
 
 # Import data structures from collections
 from collections import OrderedDict
@@ -17,7 +19,8 @@ from matplotlib import rcParams
 rcParams['figure.figsize'] = 10, 6
 # Pick style of plots 
 # Different style sheets: https://matplotlib.org/3.1.0/gallery/style_sheets/style_sheets_reference.html
-plt.style.use('ggplot')
+plt.style.use('seaborn-darkgrid')
+sns.set_context('notebook')
 
 # Removes rows and columns truncation of '...'
 pd.set_option('display.max_rows', 500)
@@ -43,6 +46,6 @@ def check_versions():
     print('Seaborn v{}'.format(sns.__version__))
     print('PyMC3 v{}'.format(pm.__version__))
 
-
+check_versions()
 #######################################################
 ```
