@@ -11,9 +11,9 @@ import tensorflow as tf
 # Plotting libs
 import matplotlib.pyplot as plt # plotting lib
 import seaborn as sns # matplotlib wrapper plotting lib
-import plotly.plotly as py
-import plotly.graph_objs as go
-import plotly_express as px
+import plotly.plotly as py https://plot.ly/python/
+import plotly.graph_objs as go 
+import plotly_express as px https://plot.ly/python/plotly-express/#visualize-distributions
 
 # Stat libs
 import random # https://docs.python.org/3.6/library/random.html
