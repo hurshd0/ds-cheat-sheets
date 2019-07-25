@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt # plotting lib
 import seaborn as sns # matplotlib wrapper plotting lib
 import random # python random lib
 import pymc3 as pm # statmodelling lib
-import theano.tensor as tt
+import theano.tensor as tt 
 import tensorflow as tf
 
 # Import data structures from collections
