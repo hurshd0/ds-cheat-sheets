@@ -40,9 +40,9 @@ warnings.filterwarnings("ignore")
 from scipy.stats import stats
 
 def check_versions():
-	print('Numpy v{}'.format(np.__version__))
-	print('Pandas v{}'.format(pd.__version__))
-	print('Matplotlib v{}'.format(plt.__version__))
+    print('Numpy v{}'.format(np.__version__))
+    print('Pandas v{}'.format(pd.__version__))
+    print('Matplotlib v{}'.format(mpl.__version__))
     print('Seaborn v{}'.format(sns.__version__))
     print('PyMC3 v{}'.format(pm.__version__))
 
