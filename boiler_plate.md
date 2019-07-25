@@ -11,6 +11,9 @@ import random # python random lib
 # Matplotlib and Seaborn params
 from matplotlib import rcParams
 rcParams['figure.figsize'] = 10, 6
+# Pick style of plots 
+# Different style sheets: https://matplotlib.org/3.1.0/gallery/style_sheets/style_sheets_reference.html
+plt.style.use('ggplot')
 
 # Removes rows and columns truncation of '...'
 pd.set_option('display.max_rows', 500)
@@ -27,7 +30,6 @@ warnings.filterwarnings("ignore")
 
 # Add Scipy Stats
 from scipy.stats import stats
-
 
 #######################################################
 ```
