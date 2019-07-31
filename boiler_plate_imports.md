@@ -1,18 +1,20 @@
-```python
-#################### BOILER PLATE ###################
+########################################################################### BOILER PLATE ##########################################################################
+
+# Below line is necessary to display plots in notebook
 %matplotlib inline
 
-# Linear Algebra & ML libs
-import numpy as np # Linear algebra lib
+# Linear Algebra libs
+import numpy as np # LA lib
 import pandas as pd # Data analysis lib
-import theano.tensor as tt 
-import tensorflow as tf
+
+# ML libs
+# import theano.tensor as tt 
+# import tensorflow as tf
 
 # Plotting libs
 import matplotlib.pyplot as plt # plotting lib
 import seaborn as sns # matplotlib wrapper plotting lib
-import plotly.plotly as py # interactive low-level plotting lib https://plot.ly/python/
-import plotly.graph_objs as go 
+import plotly.graph_objs as go # interactive low-level plotting lib https://plot.ly/python/
 import plotly_express as px #high-level api wrapper for plotly https://plot.ly/python/plotly-express/#visualize-distributions
 
 # Stat libs
@@ -20,17 +22,27 @@ import random # https://docs.python.org/3.6/library/random.html
 import pymc3 as pm # https://docs.pymc.io/nb_examples/index.html
 from scipy.stats import stats # https://docs.scipy.org/doc/scipy/reference/stats.html
 
+# Python libs and other necessary libs
+# import os
+# import sys
+
+
+# Set folder path --- Optional
+# sys.path.append('')
+
 # Import data structures from collections
-from collections import OrderedDict
+# from collections import OrderedDict
 
-# Matplotlib and Seaborn params
-from matplotlib import rcParams
-rcParams['figure.figsize'] = 10, 6
-# Pick style of plots 
-# Different style sheets: https://matplotlib.org/3.1.0/gallery/style_sheets/style_sheets_reference.html
+# --- Matplotlib and Seaborn params --- #
+# Pick style of Matplolib plots 
+
+# Different style sheets:-> https://matplotlib.org/3.1.0/gallery/style_sheets/style_sheets_reference.html
+
+# Configure Seaborn Asthetics: -> https://seaborn.pydata.org/tutorial/aesthetics.html?highlight=style
 plt.style.use('seaborn-darkgrid')
-sns.set_context('notebook')
+sns.set(context='notebook', style='darkgrid', palette='colorblind')
 
+# --- Pandas settings --- #
 # Removes rows and columns truncation of '...'
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
@@ -40,12 +52,15 @@ pd.set_option('display.width', 1000)
 import warnings
 warnings.filterwarnings("ignore")
 
-# Set folder path --- Optional
-#import sys
-#sys.path.append('')
 
-
-
+# Helper functions
+def set_seed(seed):
+    """
+    Sets random seed for reproducibility
+    """
+    random.seed(seed)
+    np.random.seed(seed)
+    
 def check_versions():
     print('Numpy v{}'.format(np.__version__))
     print('Pandas v{}'.format(pd.__version__))
@@ -54,5 +69,6 @@ def check_versions():
     print('PyMC3 v{}'.format(pm.__version__))
 
 # check_versions()
-#######################################################
-```
+
+
+###################################################################################################################################################################
