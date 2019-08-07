@@ -23,10 +23,13 @@ import random # https://docs.python.org/3.6/library/random.html
 import pymc3 as pm # https://docs.pymc.io/nb_examples/index.html
 from scipy.stats import stats # https://docs.scipy.org/doc/scipy/reference/stats.html
 
+# DATA ANALYSIS
+import pandas_profiling
+
+
 # Python libs and other necessary libs
 # import os
 # import sys
-
 
 # Set folder path --- Optional
 # sys.path.append('')
