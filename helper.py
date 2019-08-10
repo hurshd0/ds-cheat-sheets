@@ -16,13 +16,25 @@ def correlations(data, y, xs):
     Parameters
     ----------
     data: Pandas Data Frame
-    y: Target/Dependent variable
-    xs: Features/Independent variable
+    y: Target/Dependent variable - has to be python string object
+    xs: Features/Independent variables - python list of string objects
 
     Returns
     ------
     df: Pandas Data Frame Object
     """
+    if data is None:
+        raise ValueError(
+            "The parameter 'data' must be assigned a non-nil reference to a Pandas DataFrame")
+    if (y is None) or (xs is None):
+        raise ValueError("The parameter `y` or `xs` has to be non-nil reference")
+    if not isinstance(data, pd.DataFrame):
+        raise ValueError("`data` - has to be Pandas DataFrame object")
+    if not isinstrance(y, str):
+        raise ValueError("`data` - has to be Python string object")
+    if not isinstrance(xs, list):
+        raise ValueError("`xs` - has to be Python list object")    
+    
     rs = []
     rhos = []
     for x in xs:
@@ -38,7 +50,14 @@ def get_acc_rec_fone(y_true, y_pred, verbose=False, title='TEST'):
     Returns results dictionary containing accuracy score, recall score, and
     f1 score. If verbose is set True, than prints out results.
 
+    Parameters
+    ----------
+    y_true : Python list or numpy 1D array
+    y_pred : Python list or numpy 1D array
 
+    Returns
+    -------
+    results : Python dictionary
     """
     if (y_true is None) or (y_pred is None):
         raise ValueError('Parameters `y_true` and `y_pred` must be a non-nil reference to python list or numpy arrary') 
@@ -99,7 +118,11 @@ def get_rmse_mae_r2(y_true, y_pred, verbose=False, title='TEST'):
     Parameters
     ----------
     y_true : Python list or numpy 1D array
+    y_pred : Python list or numpy 1D array
 
+    Returns
+    -------
+    results : Python dictionary
     """
     if (y_true is None) or (y_pred is None):
         raise ValueError('Parameters `y_true` and `y_pred` must be a non-nil reference to python list or numpy arrary')
@@ -157,16 +180,16 @@ def find_k_best_features(model, X_train, X_val, y_train, y_val):
 
     Parameters
     ----------
-    model - sklearn model
-    X_train - Pandas Dataframe of training set features
-    X_val   - Pandas Dataframe of validation set features
-    y_train - Pandas Series of target column from training set
-    y_val   - Pandas Series of target column from validation set
-    model_type - Default is 'reg' for Regression, change to 'clf' for Classification task
+    model : sklearn model
+    X_train : Pandas Dataframe of training set features
+    X_val : Pandas Dataframe of validation set features
+    y_train : Pandas Series of target column from training set
+    y_val : Pandas Series of target column from validation set
+    model_type : Default is 'reg' for Regression, change to 'clf' for Classification task
 
     Returns
     -------
-    results - Pandas DataFrame containing K best features and their metrics
+    results : Pandas DataFrame containing K best features and their metrics
     """
     if not model:
         raise ValueError("model has to be a non-nil parameter")
@@ -258,7 +281,7 @@ def get_categorical_columns(df):
 
     Parameters
     ----------
-    df: Pandas Dataframe
+    df : Pandas Dataframe
 
     Returns
     -------
@@ -276,7 +299,7 @@ def get_numeric_columns(df):
 
     Parameters
     ----------
-    df: Pandas Dataframe
+    df : Pandas Dataframe
 
     Returns
     -------
@@ -315,8 +338,8 @@ def plot_numerical_columns_reg(df, target_col, alpha=0.5, color='grey'):
 
     Parameters
     ----------
-    df: Pandas Dataframe
-    target_col: Target variable, dependent variable
+    df : Pandas Dataframe
+    target_col : Target variable, dependent variable
     """
     num_columns = get_numeric_columns(df)
     for col in sorted(num_columns):
