@@ -1,3 +1,4 @@
+```python
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -512,3 +513,4 @@ def plot_scatter_by_groups(df, x_col, y_col, group_by_col, colors=None, alpha=0.
         ax.scatter(x, y, label=label, alpha=alpha)
     plt.show()
     plt.close()
+```
