@@ -3,7 +3,9 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 from scipy import stats
-from sklearn.metrics import accuracy_score, recall_score, f1_score
+import statsmodels.api as sm
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_recall_fscore_support as score
 from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
 from sklearn.feature_selection import f_regression, SelectKBest, f_classif
@@ -47,8 +49,7 @@ def correlations(data, y, xs):
 
 def get_acc_rec_fone(y_true, y_pred, verbose=False, title='TEST'):
     """
-    Returns results dictionary containing accuracy score, recall score, and
-    f1 score. If verbose is set True, than prints out results.
+    Returns results dictionary containing accuracy score, precision, recall, f1 score, and support. If verbose is set True, than prints out results.
 
     Parameters
     ----------
@@ -67,19 +68,24 @@ def get_acc_rec_fone(y_true, y_pred, verbose=False, title='TEST'):
     results = {}
     # Compute scores
     acc_ = accuracy_score(y_true, y_pred)
-    rec_ = recall_score(y_true, y_pred)
-    f1_ = f1_score(y_true, y_pred)
+    prec_, rec_, fscore_, sprt_ = score(y_true, y_pred)
     # Store scores
     results['ACCURACY'] = acc_
+    results['PRECISION'] = prec_
     results['RECALL'] = rec_
-    results['F1'] = f1_
+    results['F1'] = fscore_
+    results['SUPPORT'] = sprt_
+    df = pd.DataFrame({
+        'Precision':prec_,
+        'Recall':rec_,
+        'F Score':fscore_,
+        'Support':sprt_
+    }, index=y_train.unique())
     if verbose:
         print(f'-------- {title} SET --------')
         print(f'Accuracy Score: {acc_:.2f}')
-        print(f'Recall: {rec_:.2f}')
-        print(f'F1 Score: {f1_:.2f}')
+        print(df)
     return results
-
 
 def get_clf_metrics(model, X_train, X_val, y_train, y_val, verbose=False):
     """
@@ -90,8 +96,8 @@ def get_clf_metrics(model, X_train, X_val, y_train, y_val, verbose=False):
         raise ValueError("model has to be a non-nil parameter")
     
     # Sanity check the columns match for both validation and training set
+    print(X_train.shape, X_val.shape, y_train.shape, y_val.shape)
     assert X_train.shape[1] == X_val.shape[1]
-    assert y_train.shape[1] == y_val.shape[1]
     
     # Results dict
     results = {}
@@ -157,7 +163,6 @@ def get_reg_metrics(model, X_train, X_val, y_train, y_val, verbose=False):
         raise ValueError("model has to be a non-nil parameter")
 
     assert X_train.shape[1] == X_val.shape[1]
-    assert y_train.shape[1] == y_val.shape[1]
 
     # Results dict
     results = {}
@@ -196,7 +201,6 @@ def find_k_best_features(model, X_train, X_val, y_train, y_val):
     
     # Make sure columns match for both training set and validation set
     assert X_train.shape[1] == X_val.shape[1]
-    assert y_train.shape[1] == y_val.shape[1]
     
     # Get model type
     model_type = getattr(model, "_estimator_type", None) 
@@ -212,7 +216,6 @@ def find_k_best_features(model, X_train, X_val, y_train, y_val):
         results['MAE'] = []
     elif model_type == 'classifier':
         results['ACCURACY'] = []
-        results['RECALL'] = []
         results['F1'] = []
     else:
         raise ValueError("Incorrect option was selected for `model_type`, can only be 'reg' or 'clf'")
@@ -252,7 +255,6 @@ def find_k_best_features(model, X_train, X_val, y_train, y_val):
             metrics = get_acc_rec_fone(y_val, y_pred)
             # Store metrics
             results['ACCURACY'].append(metrics['ACCURACY'])
-            results['RECALL'].append(metrics['RECALL'])
             results['F1'].append(metrics['F1'])
         else:
             raise ValueError('This logic shouldn\'t have been executed')
@@ -269,7 +271,6 @@ def find_k_best_features(model, X_train, X_val, y_train, y_val):
         return pd.DataFrame(data={
         'K':results['K'],
         'ACCURACY':results['ACCURACY'],
-        'RECALL':results['RECALL'],
         'F1':results['F1']
     })
     else:
@@ -310,6 +311,33 @@ def get_numeric_columns(df):
             "The parameter 'df' must be assigned a non-nil reference to a Pandas DataFrame")
     return list(df.select_dtypes(exclude=['category', 'object']))
 
+def describe_tcat_by_fnum(df, f_num, t_cat, verbose=False):
+    grouped = df.groupby(t_cat)
+    grouped_y = grouped[f_num].describe()
+    if verbose:
+        print(grouped_y)
+    return grouped_y
+
+def relative_freq_fcat_by_tcat(df, f_cat, t_cat, verbose=False):
+    grouped = df.groupby(f_cat)
+    grouped_x = grouped[t_cat].value_counts(normalize=True)
+    if verbose:
+        print(grouped_x)
+    return grouped_x
+
+def get_quantiles(df, cols):
+    return df[cols].quantile(q=[.01, .25, .5, .75, .95, .99])
+
+def get_leq_quantile(df, col, q):
+    return df[(df[col] <= df[col].quantile(q=q))]
+
+def get_geq_quantile(df, col, q):
+    return df[(df[col] >= df[col].quantile(q=q))]
+
+def get_between_quantiles(df, col, qs):
+    lower_q = min(qs)
+    upper_q = max(qs)
+    return df[(df[col] >= df[col].quantile(q=lower_q)) & (df[col] <= df[col].quantile(q=upper_q))]
 
 def plot_categorical__reg(df, target_col, min_card=2, max_card=12, height=5, ascpect=2, rotation=45, color='grey', kind='bar'):
     """
@@ -348,6 +376,9 @@ def plot_numerical_columns_reg(df, target_col, alpha=0.5, color='grey'):
                        scatter_kws=dict(alpha=alpha, color=color))
             plt.show()
             plt.close()
+
+
+
 
 def plot_correlation_heatmap(data=None, vmax=1, annot=True, corr_type='pearson', figsize=(12, 12)):
     """
@@ -435,3 +466,49 @@ def plot_confusion_matrix(y_true, y_pred, classes=None,
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
     return ax
+
+def lowess_scatter(data, x, y, jitter=0.0, skip_lowess=False):
+    if skip_lowess:
+        fit = np.polyfit(data[x], data[y], 1)
+        line_x = np.linspace(data[x].min(), data[x].max(), 10)
+        line = np.poly1d(fit)
+        line_y = list(map(line, line_x))
+    else:
+        lowess = sm.nonparametric.lowess(data[y], data[x], frac=.3)
+        line_x = list(zip(*lowess))[0]
+        line_y = list(zip(*lowess))[1]
+
+    figure = plt.figure(figsize=(10, 6))
+    axes = figure.add_subplot(1, 1, 1)
+    xs = data[x]
+    if jitter > 0.0:
+        xs = data[x] + stats.norm.rvs(0, 0.5, data[x].size)
+
+    axes.scatter(xs, data[y], marker="o", color="steelblue", alpha=0.5)
+    axes.plot(line_x, line_y, color="DarkRed")
+
+    title = "Plot of {0} v. {1}".format(x, y)
+
+    if not skip_lowess:
+        title += " with LOESS"
+    axes.set_title(title)
+    axes.set_xlabel(x)
+    axes.set_ylabel(y)
+
+    plt.show()
+    plt.close()
+
+def plot_scatter_by_groups(df, x_col, y_col, group_by_col, colors=None, alpha=0.75):
+    labels = df[group_by_col].unique()
+    num_labels = np.arange(1, len(labels)+1)
+    fig, ax = plt.subplots()
+    for idx, label in zip(num_labels, labels):
+        indices_to_keep = df[group_by_col] == label
+        y = df.loc[indices_to_keep, y_col]
+        if x_col == 'index':
+            x = df.index[indices_to_keep]
+        else:
+            x = df.loc[indices_to_keep, x_col]
+        ax.scatter(x, y, label=label, alpha=alpha)
+    plt.show()
+    plt.close()
