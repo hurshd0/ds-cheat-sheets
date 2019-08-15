@@ -83,7 +83,7 @@ def get_acc_rec_fone(y_true, y_pred, verbose=False, title='TEST'):
     }, index=y_true.unique())
     if verbose:
         print(f'-------- {title} SET --------')
-        print(f'Accuracy Score: {acc_:.2f}')
+        print(f'Accuracy Score: {acc_:.4f}')
         print(df)
     return results
 
@@ -147,10 +147,10 @@ def get_rmse_mae_r2(y_true, y_pred, verbose=False, title='TEST'):
     results['RMSE'] = rmse_
     if verbose:
         print(f'-------- {title} SET --------')
-        print(f'R^2: {r_square:.2f}')
-        print(f'MSE: {mse:.2f}')
-        print(f'RMSE: {rmse:.2f}')
-        print(f'MAE: {mae:.2f}')
+        print(f'R^2: {r_square:.4f}')
+        print(f'MSE: {mse:.4f}')
+        print(f'RMSE: {rmse:.4f}')
+        print(f'MAE: {mae:.4f}')
     return results
 
 
