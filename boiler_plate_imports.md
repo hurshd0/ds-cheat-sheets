@@ -128,7 +128,15 @@ import shap  # package used to calculate Shap values
 
 ############################# Ignore the warnings ##############################
 import warnings
-warnings.filterwarnings("ignore")
+
+# Ignore this Numpy warning when using Plotly Express:
+# FutureWarning: Method .ptp is deprecated and will be removed in a 
+# future version. Use numpy.ptp instead.
+import warnings
+warnings.filterwarnings(action='ignore', category=FutureWarning, module='numpy')
+
+# Any XGBoost warnings
+warnings.filterwarnings(action='ignore', category=FutureWarning, module='xgboost')
 ################################################################################
 
 ############################### Helper functions ################################
@@ -147,6 +155,27 @@ def check_versions():
     print('Seaborn v{}'.format(sns.__version__))
     print('PyMC3 v{}'.format(pm.__version__))
         
+# If you're in Colab...
+GIT_REPO_URL = ''
+def run_in_colab(url):
+    # Install required python packages
+    # category_encoders, version >= 2.0
+    # eli5, version >= 0.9
+    # pandas-profiling, version >= 2.0
+    # plotly, version >= 4.0
+    !pip install --upgrade category_encoders pdpbox plotly shap eli5 pandas-profiling
+    
+    # Pull files from Github repo
+    os.chdir('/content')
+    !git init .
+    !git remote add origin url
+    !git pull origin master
+    
+
+
+import os, sys
+if 'google.colab' in sys.modules:
+    run_in_colab(GIT_REPO_URL)
 
 ##################################################################################
 ```
