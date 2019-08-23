@@ -165,6 +165,17 @@ def run_in_colab(url):
     # plotly, version >= 4.0
     !pip install --upgrade category_encoders pdpbox plotly shap eli5 pandas-profiling
     
+    # Don't use Matplotlib 3.1.1
+    # Why? Because of this issue: sns.heatmap top and bottom boxes are cut off
+    from distutils.version import StrictVersion
+    import matplotlib
+    version = matplotlib.__version__
+    print('Matplotlib version', version)
+    try:
+        assert StrictVersion(version) != StrictVersion('3.1.0')
+    except:
+        pip install matplotlib==3.1.0
+    
     # Pull files from Github repo
     os.chdir('/content')
     !git init .
